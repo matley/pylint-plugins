@@ -54,9 +54,11 @@ class OnlyUnicodeChecker(BaseTokenChecker):
     }
 
     def process_module(self, module):
-        pass
+        self._unicode_literals = 'unicode_literals' in module.future_imports
 
     def process_tokens(self, tokens):
+        if self._unicode_literals:
+            return
         previous_token = None
         for (tok_type, token, (start_row, start_col), _, _) in tokens:
             if tok_type in (tokenize.INDENT, tokenize.NEWLINE, tokenize.COMMENT) or token == '\n':
